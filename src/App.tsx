@@ -58,7 +58,6 @@ function App() {
             />
           </Modal>
         )
-     
           // <Modal visible={visibility} onClose={handleModal}>
           //   <Wizard 
           //     steps={steps}
