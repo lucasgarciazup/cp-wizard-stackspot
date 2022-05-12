@@ -1,71 +1,129 @@
-import { Button, Modal } from 'citric'
+import { Button, Modal, Tabs, Text } from 'citric'
 import TextField from 'citric/dist/components/Textfield';
 import { useCallback, useState } from 'react'
-import Success from './components/Success';
-import Wizard, { StepInterface } from './components/Wizard'
+import Wizard, { WizardCallback, WizardFooter, WizardFooterWrapper } from './components/Wizard'
+import { useWizard } from './components/Wizard/WizardContext';
 
-const Page1 = () => {
-  const [name, setName] = useState("");
-  const [objective, setObjective] = useState("");
-  const [techs, setTechs] = useState("");
-  const [about, setAbout] = useState("");
+
+
+const Page1: React.FC = () => {
+
+  const { nextStep } = useWizard();
 
   return (
     <div>
+      <h1>Introdução</h1>
+      <WizardCallback>
+        {({ current, prevStep }) => (
+          <WizardFooter>
+            <WizardFooterWrapper>
+              <Button text="Voltar" color="secondary" onClick={() => prevStep()} />
+            </WizardFooterWrapper>
+            <WizardFooterWrapper>
+              <Button text="Próximo" color="primary" onClick={() => nextStep()} />
+            </WizardFooterWrapper>
+          </WizardFooter>
+        )}
+      </WizardCallback>
+    </div>
+  );
+}
+
+const Page2: React.FC = () => {
+  return (
+    <div>
       <h1>Informações básicas</h1>
-      <p>Preencha os campos abaixo com as informações básicas</p>
-      <form action="">
-        <TextField.Text width='' title="Nome do estudio" onChange={e => setName(e.target.value)}/>
-        <TextField.Text width='' title='Objetivo do estúdio/O que faz' onChange={e => setObjective(e.target.value)}/>
-        <TextField.Text width='' title='Tecnologias utilizadas' onChange={e => setTechs(e.target.value)}/>
-        <TextField.Text width='' title='Quem somos' onChange={e => setAbout(e.target.value)}/>
-        
-      </form>
+     <WizardCallback>
+        {({ current, nextStep, prevStep }) => (
+          <WizardFooter>
+            <WizardFooterWrapper>
+              <Button text="Voltar" color="secondary" onClick={() => prevStep()} />
+            </WizardFooterWrapper>
+            <WizardFooterWrapper>
+              <Button text="Próximo" color="primary" onClick={() => nextStep()} />
+            </WizardFooterWrapper>
+          </WizardFooter>
+        )}
+      </WizardCallback>
+    </div>
+  );
+}
+
+const Page3: React.FC = () => {
+  return (
+    <div>
+      <h1>Stacks</h1>
+      <WizardCallback>
+        {({ current, nextStep, prevStep }) => (
+          <WizardFooter>
+            <WizardFooterWrapper>
+              <Button text="Voltar" color="secondary" onClick={() => prevStep()} />
+            </WizardFooterWrapper>
+            <WizardFooterWrapper>
+              <Button text="Próximo" color="primary" onClick={() => nextStep()} />
+            </WizardFooterWrapper>
+          </WizardFooter>
+        )}
+      </WizardCallback>
+    </div>
+  );
+}
+
+const Page4: React.FC = ({ handleModal }) => {
+  return (
+    <div>
+      <h1>Validação</h1>
+      <WizardCallback>
+        {({ current, nextStep, prevStep }) => (
+          <WizardFooter>
+            <WizardFooterWrapper>
+              <Button text="Voltar" color="secondary" onClick={() => prevStep()} />
+            </WizardFooterWrapper>
+            <WizardFooterWrapper>
+              <Button text="Próximo" color="primary" onClick={() => handleModal()} />
+            </WizardFooterWrapper>
+          </WizardFooter>
+        )}
+      </WizardCallback>
     </div>
   );
 }
 
 function App() {
   const [visibility, setVisibility] = useState(true)
-  const [data, setData] = useState(false) 
-
+  const [visibility2, setVisibility2] = useState(true)
+  
   const handleModal = useCallback(() => {
     setVisibility(!visibility)
     return { valid: true }
   }, [visibility])
 
-  const saveData = useCallback((dados: object) => {
-    setData(state => !state)
-    return { valid: true, error: "Ocorreu um erro ao salvar os dados" }
-  }, [])
-
-  const steps: StepInterface[] = [
-    { title: "Introdução", content: Page1(), skipStep: true, action: { function: saveData} },
-    { title: "Introdução", content: Page1(), skipStep: true, action: { function: saveData} },
-    { title: "Introdução", content: Page1(), skipStep: true, action: { function: saveData} },
-    { title: "Validação", content: Success(), backStep: true, skipStep: true, action: { text: "Fechar", function: handleModal} },
-  ]
-
   return (
     <div className="App">
       <h1>CP WIZARD STACKSPOT</h1>
+      
+      <Button color="primary" text="Open Modal" onClick={handleModal} />
+      {/* {visibility && (
+        <Modal visible onClose={handleModal}>
+          <Wizard steps={steps}>
 
-      <Button color="primary" text="Open Modal" onClick={handleModal}/>
-        {visibility && (
-          <Modal visible onClose={handleModal}>
-            <Wizard 
-              steps={steps}
-            />
-          </Modal>
-        )
-          // <Modal visible={visibility} onClose={handleModal}>
-          //   <Wizard 
-          //     steps={steps}
-          //   />
-          // </Modal>
-        
+              {step === 'page1' && <Page1 />}
+           
+          </Wizard>
+        </Modal>
+      )} */}
 
-}
+      {visibility && (
+        <Modal visible onClose={handleModal}>
+          <Wizard activeStep="Introdução" finished={[]}>
+              <Page1 key="Introdução"/>
+              <Page2 key="Informações básicas"/>
+              <Page3 key="Stacks"/>
+              <Page4 key="Validação" handleModal={handleModal}/>
+          </Wizard>
+        </Modal>
+      )
+    }
     </div>
   )
 }
