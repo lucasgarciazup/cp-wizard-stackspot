@@ -67,12 +67,12 @@ export const Step = styled.li`
             content: "";
             width: 3px;
             height: 20px;
-            position: fixed;
+            position: absolute;
             border-radius: 235px;
             margin: -28px 8px;
         }
     }
-    &.completed > ${StepIconBox} {
+    &.finished > ${StepIconBox} {
         background : #F56300;
         border-color: #F56300;
         
