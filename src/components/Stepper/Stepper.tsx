@@ -2,19 +2,18 @@ import React, { useEffect } from 'react';
 import { Icon } from 'citric';
 
 import { Container, SideMenu, Step, StepIconBox, StepList, Wrapper } from './styles';
-import { useWizard, WizardProvider } from './WizardContext';
+import { useStepper, StepperProvider } from './StepperContext';
 
 export type StepInterface = string[]
 
-interface WizardInterface {
-  finished: string[],
-  children: React.ReactElement[]
+interface StepperInterface {
+  children: React.ReactElement<{ key: string }>[]
   activeStep: string
 }
 
-export const WizardComponent: React.FC<WizardInterface> = (props) => {
-  const { activeStep, children } = props;  
-  const { current, steps, finished, selectCurrent, updateSteps } = useWizard();
+export const StepperComponent: React.FC<StepperInterface> = (props) => {
+  const { activeStep, children } = props;
+  const { current, steps, finished, selectCurrent, updateSteps } = useStepper();
 
   useEffect(() => {
     if (activeStep) {
@@ -35,7 +34,6 @@ export const WizardComponent: React.FC<WizardInterface> = (props) => {
 
   function getStepClassName(step: string): string {
     const current = isCurrent(step);
-    console.log(current, step, finished, finished.includes(step));
     const stepfinished = finished.includes(step)
     if (stepfinished) {
       return 'finished';
@@ -65,25 +63,25 @@ export const WizardComponent: React.FC<WizardInterface> = (props) => {
         </StepList>
       </SideMenu>
       <Container>
-        {children.map((children, index) => (
-          <div key={index} style={{ display: current === children.key ? 'block' : 'none'}}>
-            {children}
-          </div>
-        ))}
+        {children.map((children) => {
+          if (current === children.key) {
+            return children
+          }
+        })}
       </Container>
     </Wrapper>
   );
 }
 
-const Wizard: React.FC<WizardInterface> = (props) => {
+const Stepper: React.FC<StepperInterface> = (props) => {
   return (
-    <WizardProvider>
-      <WizardComponent {...props} />
-    </WizardProvider>
+    <StepperProvider>
+      <StepperComponent {...props} />
+    </StepperProvider>
   )
 }
 
-export default Wizard;
+export default Stepper;
 
 
 

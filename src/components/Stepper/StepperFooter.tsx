@@ -2,7 +2,7 @@ import { ReactElement, JSXElementConstructor, ReactFragment, ReactPortal } from 
 import { ContainerFooter, ContainerFooterWrapper } from './styles'
 
 
-export function WizardFooter({children}: any) {
+export function StepperFooter({children}: any) {
     return (
         <ContainerFooter>
             {children}
@@ -10,7 +10,7 @@ export function WizardFooter({children}: any) {
     )
 }
 
-export function WizardFooterWrapper({children}: any) {
+export function StepperFooterWrapper({children}: any) {
     return (
         <ContainerFooterWrapper>
             {children}

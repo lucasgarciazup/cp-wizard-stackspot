@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
 type Step = string;
+
 export type ContextType = {
     steps: Step[],
     current: Step,
@@ -13,16 +14,13 @@ export type ContextType = {
     removeFinished: (step: Step) => void,
     finished: Step[];
 }
-
-type CurrentType = number;
-
-export const WizardContext = createContext({} as ContextType)
-
-interface WizardProviderInterface {
+interface StepperProviderInterface {
     children: React.ReactElement,
 }
 
-export const WizardProvider: React.FC<WizardProviderInterface> = ({ children }) => {
+export const StepperContext = createContext({} as ContextType)
+
+export const StepperProvider: React.FC<StepperProviderInterface> = ({ children }) => {
     const [steps, setSteps] = useState<Step[]>([]);
     const [current, setCurrent] = useState<Step>('');
     const [finished, setFinished] = useState<Step[]>([]);
@@ -61,7 +59,7 @@ export const WizardProvider: React.FC<WizardProviderInterface> = ({ children }) 
     }, []);
 
     return (
-        <WizardContext.Provider value={{
+        <StepperContext.Provider value={{
             steps,
             current,
             selectCurrent,
@@ -74,12 +72,10 @@ export const WizardProvider: React.FC<WizardProviderInterface> = ({ children }) 
             removeFinished
         }}>
             {children}
-        </WizardContext.Provider>
+        </StepperContext.Provider>
     )
 }
 
-export const WizardCallback = WizardContext.Consumer;
-
-export function useWizard() {
-    return useContext(WizardContext);
+export function useStepper() {
+    return useContext(StepperContext);
 }
